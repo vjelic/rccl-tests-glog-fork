@@ -1,0 +1,432 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Glog.AI",
+          "organization": "Glog.AI",
+          "fullName": "Glog, Making software more secure",
+          "version": "1.0.0",
+          "semanticVersion": "1.0.0",
+          "informationUri": "https://www.glog.ai",
+          "rules": [
+            {
+              "id": "glog-73b0c01e-4824-48c2-a909-d619e3f9d537",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `strncpy` function in C++ is considered unsafe because it does not guarantee null-termination of the destination string when the source string length is greater than or equal to the destination buffer size. This can lead to buffer overflows, which can be exploited to execute arbitrary code, overwrite data, or cause a system crash.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, consider using safer string handling functions that ensure null-termination of the destination string and prevent buffer overflows. These include `strlcpy` or `strncpy_s` (in C11 standard). \n\nAlso, always ensure that the destination buffer is large enough to hold the source string including the null-terminating character. \n\n## Source Code Fix Recommendation\n\nReplace the `strncpy` function with a safer alternative. For example, if `strlcpy` is available, you can use:\n\n```cpp\n#include <string.h>\n\n// ...\n\nsize_t len = strlen(p);\nif (len >= sizeof(hostHash) - offset) {\n    len = sizeof(hostHash) - offset - 1;\n}\nstrlcpy(hostHash+offset, p, len);\nhostHash[offset + len] = '\\0';\n```\n\n## Library Dependencies\n\nThe code example requires the `<string.h>` library.\n\n## References\n\n- [OWASP C++ Secure Coding Practices](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html)\n- [CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer](https://cwe.mitre.org/data/definitions/119.html)\n\nPlease note that the availability of `strlcpy` function may depend on your platform and compiler. If it's not available, consider using a safe string handling library or implementing a safe version of `strncpy`."
+              },
+              "properties": {
+                "tags": [
+                  "DS111237"
+                ]
+              }
+            },
+            {
+              "id": "glog-d413a690-e29a-415a-808f-4c279defdbc2",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `strlen()` function in C and C++ is used to find the length of a string. However, it can lead to vulnerabilities if not used properly. The function counts the number of characters in a string until it reaches a null character (`'\\0'`). If the string is not properly null-terminated, `strlen()` will continue reading memory beyond the intended boundary, leading to a buffer overflow vulnerability. This can result in crashes, incorrect behavior, or potential execution of malicious code.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always ensure that your strings are null-terminated. Avoid using `strlen()` on strings that may not be null-terminated. Instead, consider using safer alternatives such as `strnlen()`, which takes an additional parameter to specify the maximum length of the string.\n\n## Source Code Fix Recommendation\n\nReplace `strlen(hostHash)` with `strnlen(hostHash, MAX_LENGTH)`, where `MAX_LENGTH` is the maximum expected length of `hostHash`.\n\n```cpp\n// Before\nsize_t length = strlen(hostHash);\n\n// After\nsize_t length = strnlen(hostHash, MAX_LENGTH);\n```\n\n## Library Dependencies\n\nThe `strlen()` function is part of the C standard library, so no additional libraries are needed.\n\n## References\n\n- [OWASP C/C++ Vulnerabilities](https://owasp.org/www-pdf-archive/OWASP_SCP_Quick_Reference_Guide_v2.pdf)\n- [CWE-126: Buffer Over-read](https://cwe.mitre.org/data/definitions/126.html)\n\nPlease note that the links provided are accessible to anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "tags": [
+                  "DS140021"
+                ]
+              }
+            },
+            {
+              "id": "glog-ba92965a-3533-4450-97ff-c4a2e0d2e78c",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `strncpy` function in C++ is used to copy a string from source to destination. However, it can lead to vulnerabilities if not used properly. The function does not guarantee to null-terminate the destination string when the source string length is greater than or equal to the destination string size. This can lead to buffer overflow vulnerabilities, which can be exploited to execute arbitrary code, cause a denial of service, or gain unauthorized access.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to use safer string copy functions that ensure null-termination of the destination string. Functions such as `strlcpy` or `snprintf` can be used instead. Also, always ensure that the destination buffer is large enough to hold the source string including the null-terminating character.\n\n## Source Code Fix Recommendation\n\nReplace the `strncpy` function with `strlcpy` or `snprintf` function. Here is an example of how to do it:\n\n```cpp\n#include <string.h>\n#include <stdio.h>\n\nchar hostHash[SIZE];\nchar hostname[SIZE];\n\n// strncpy(hostHash, hostname, sizeof(hostHash));\nsnprintf(hostHash, sizeof(hostHash), \"%s\", hostname);\n```\n\n## Library Dependencies\n\nThe code example requires the following libraries:\n\n- `string.h`\n- `stdio.h`\n\n## References\n\n- [OWASP C++ Secure Coding Practices](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)\n\nPlease note that the links provided are active and accessible to anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "tags": [
+                  "DS111237"
+                ]
+              }
+            },
+            {
+              "id": "glog-e169aaf7-21b4-439d-b1aa-54340fee15cf",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `strlen()` function in C and C++ is used to find the length of a string. However, it can lead to vulnerabilities if not used properly. The function counts the number of characters in a string until it reaches a null character (`'\\0'`). If the string is not properly null-terminated, `strlen()` will continue reading memory beyond the intended boundary, leading to a buffer overflow vulnerability. This can result in crashes, incorrect behavior, or potential execution of malicious code.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always ensure that your strings are null-terminated. Avoid using `strlen()` on strings that may not be null-terminated. Instead, consider using safer alternatives such as `strnlen()`, which takes an additional parameter to specify the maximum length of the string.\n\n## Source Code Fix Recommendation\n\nReplace `strlen(hostHash)` with `strnlen(hostHash, MAX_LENGTH)`, where `MAX_LENGTH` is the maximum expected length of `hostHash`.\n\n```cpp\n// Before\nsize_t length = strlen(hostHash);\n\n// After\nsize_t length = strnlen(hostHash, MAX_LENGTH);\n```\n\n## Library Dependencies\n\nThe `strlen()` function is part of the C standard library, so no additional libraries are needed.\n\n## References\n\n- [OWASP C/C++ Vulnerabilities](https://owasp.org/www-pdf-archive/OWASP_SCP_Quick_Reference_Guide_v2.pdf)\n- [CWE-126: Buffer Over-read](https://cwe.mitre.org/data/definitions/126.html)\n\nPlease note that the links provided are accessible to anonymous users at the time of writing this report."
+              },
+              "properties": {
+                "tags": [
+                  "DS140021"
+                ]
+              }
+            }
+          ],
+          "language": "en-US",
+          "contents": [
+            "localizedData",
+            "nonLocalizedData"
+          ],
+          "isComprehensive": false
+        }
+      },
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "glog-73b0c01e-4824-48c2-a909-d619e3f9d537",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Detected Use of Prohibited C Function (strncpy)\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/common.h"
+                },
+                "region": {
+                  "startLine": 247,
+                  "startColumn": 8,
+                  "endLine": 247,
+                  "endColumn": 52,
+                  "charOffset": 8527,
+                  "charLength": 44,
+                  "snippet": {
+                    "text": "strncpy(hostHash+offset, p, sizeof(hostHash)",
+                    "rendered": {
+                      "text": "strncpy(hostHash+offset, p, sizeof(hostHash)",
+                      "markdown": "`strncpy(hostHash+offset, p, sizeof(hostHash)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8527,
+                        "charLength": 44
+                      },
+                      "insertedContent": {
+                        "text": "strcpy_s(hostHash+offset,  sizeof(hostHash,  p)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": {
+                "text": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8527,
+                        "charLength": 44
+                      },
+                      "insertedContent": {
+                        "text": "strlcpy(hostHash+offset,  p,  sizeof(hostHash)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Important",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.BannedFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-d413a690-e29a-415a-808f-4c279defdbc2",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (strlen)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/common.h"
+                },
+                "region": {
+                  "startLine": 241,
+                  "startColumn": 15,
+                  "endLine": 241,
+                  "endColumn": 31,
+                  "charOffset": 8385,
+                  "charLength": 16,
+                  "snippet": {
+                    "text": "strlen(hostHash)",
+                    "rendered": {
+                      "text": "strlen(hostHash)",
+                      "markdown": "`strlen(hostHash)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "If a string is missing a null terminator, strlen will read past the end of the buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8385,
+                        "charLength": 16
+                      },
+                      "insertedContent": {
+                        "text": "strlen_s(hostHash, <size of hostHash>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": {
+                "text": "If a string is missing a null terminator, strlen will read past the end of the buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8385,
+                        "charLength": 16
+                      },
+                      "insertedContent": {
+                        "text": "strnlen(hostHash, <size of hostHash>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-ba92965a-3533-4450-97ff-c4a2e0d2e78c",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Prohibited strncpy C Function Identified\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/common.h"
+                },
+                "region": {
+                  "startLine": 240,
+                  "startColumn": 9,
+                  "endLine": 240,
+                  "endColumn": 54,
+                  "charOffset": 8323,
+                  "charLength": 45,
+                  "snippet": {
+                    "text": "strncpy(hostHash, hostname, sizeof(hostHash))",
+                    "rendered": {
+                      "text": "strncpy(hostHash, hostname, sizeof(hostHash))",
+                      "markdown": "`strncpy(hostHash, hostname, sizeof(hostHash))`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8323,
+                        "charLength": 45
+                      },
+                      "insertedContent": {
+                        "text": "strcpy_s(hostHash,  sizeof(hostHash,  hostname)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": {
+                "text": "strncpy is dangerous, as if the source contains 'n' or more characters, it will not null terminate the destination."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8323,
+                        "charLength": 45
+                      },
+                      "insertedContent": {
+                        "text": "strlcpy(hostHash,  hostname,  sizeof(hostHash)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Important",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.BannedFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-e169aaf7-21b4-439d-b1aa-54340fee15cf",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (strlen)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/common.h"
+                },
+                "region": {
+                  "startLine": 256,
+                  "startColumn": 27,
+                  "endLine": 256,
+                  "endColumn": 43,
+                  "charOffset": 8732,
+                  "charLength": 16,
+                  "snippet": {
+                    "text": "strlen(hostHash)",
+                    "rendered": {
+                      "text": "strlen(hostHash)",
+                      "markdown": "`strlen(hostHash)`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "If a string is missing a null terminator, strlen will read past the end of the buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8732,
+                        "charLength": 16
+                      },
+                      "insertedContent": {
+                        "text": "strlen_s(hostHash, <size of hostHash>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "description": {
+                "text": "If a string is missing a null terminator, strlen will read past the end of the buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/common.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8732,
+                        "charLength": 16
+                      },
+                      "insertedContent": {
+                        "text": "strnlen(hostHash, <size of hostHash>)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
